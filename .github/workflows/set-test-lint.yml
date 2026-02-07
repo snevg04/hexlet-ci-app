@@ -1,11 +1,29 @@
-name: set-test-lint
+name: Node CI
 
-on: push
+on:
+  - push
+  - pull_request
+env:
+  CI: true
+
 jobs:
-  set-test-lint:
+  build:
+    
     runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x]
+
     steps:
       - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+          cache: 'npm'
       - run: make setup
       - run: make test
       - run: make lint
+      - name: Print Hello from Hexlet
+        uses: hexlet-components/hello-from-hexlet-action@release
